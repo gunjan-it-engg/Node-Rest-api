@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 // mongoose.connect("mongodb://127.0.0.127017/task-manager-apis");
-mongoose.connect("mongodb://localhost:27017/test");
+try {
+  mongoose.connect(process.env.MONGODB);
+  console.log("connection established");
+} catch (e) {
+  console.log(e.message);
+}
 // so here we can creating a model with connection
 
 // // here we can pass the data to the model for sending into the db.
