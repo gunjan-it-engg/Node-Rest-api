@@ -91,4 +91,3 @@ app.listen(port, () => {
 // app.post("/upload", upload.single("upload"), (req, res) => {
 //   res.send();
 // });
-console.log("hi");

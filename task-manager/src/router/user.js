@@ -14,8 +14,8 @@ const sharp = require("sharp");
 
 user.post("/users", async (req, res) => {
   console.log(req.body);
-  const user = new User(req.body);
   try {
+    const user = new User(req.body);
     await user.save();
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
@@ -26,15 +26,28 @@ user.post("/users", async (req, res) => {
 
 // End -point for getting all users
 
-user.get("/users", auth, (req, res) => {
-  console.log(req.body);
-  User.find({})
-    .then((users) => {
-      res.send(users);
-    })
-    .catch((e) => {
-      res.status(500).send();
-    });
+user.get("/users", auth, async (req, res) => {
+  // console.log(req.body);
+
+  try {
+    const userList = await User.find();
+    console.log("user list", userList);
+    console.log("asdf");
+    let test = [];
+    test.push({ ...userList[0] });
+    // console.log("test", test[0]._doc);
+    res.send(userList);
+  } catch (e) {
+    res.send(e);
+  }
+  // User.find()
+  //   .then((users) => {
+  //     console.log(users);
+  //     res.send(users);
+  //   })
+  //   .catch((e) => {
+  //     res.status(500).send();
+  //   });
 });
 
 // End-point for getting profile
