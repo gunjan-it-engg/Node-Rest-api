@@ -23,36 +23,36 @@ task.post("/tasks", auth, async (req, res) => {
 // GET /tasks?limit=2&skip=0
 // GET /tasks?SortBy=createAt:desc (descending order)
 
-task.get("/tasks", auth, async (req, res) => {
-  const match = {};
-  const sort = {};
-  // console.log(req.query.completed);
-  if (req.query.completed) {
-    match.completed = req.query.completed === "true";
-  }
-  if (req.query.sortBy) {
-    const parts = req.query.sortBy.split(":");
-    sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
-  }
-  try {
-    await req.user.populate({
-      path: "tasks",
-      match,
-      options: {
-        limit: parseInt(req.query.limit),
-        skip: parseInt(req.query.sort),
-        sort: {
-          completed: 1,
-        },
-      },
-    });
-    // .execPopulate();
-    res.send(req.user.tasks);
-  } catch (e) {
-    console.log(e);
-    res.status(500).send({ error: e.message });
-  }
-});
+// task.get("/tasks", auth, async (req, res) => {
+//   const match = {};
+//   const sort = {};
+//   // console.log(req.query.completed);
+//   if (req.query.completed) {
+//     match.completed = req.query.completed === "true";
+//   }
+//   // if (req.query.sortBy) {
+//   //   const parts = req.query.sortBy.split(":");
+//   //   sort[parts[0]] = parts[1] === "asc" ? 1 : 1;
+//   // }
+//   try {
+//     await req.user.populate({
+//       path: "tasks",
+//       match,
+//       options: {
+//         limit: parseInt(req.query.limit),
+//         skip: parseInt(req.query.sort),
+//         sort: {
+//           completed: 1,
+//         },
+//       },
+//     });
+//     // .execPopulate();
+//     res.send(req.user.tasks);
+//   } catch (e) {
+//     console.log(e);
+//     res.status(500).send({ error: e.message });
+//   }
+// });
 
 // console.log(req.body);
 // Task.find({ owner: req.user._id })
@@ -112,7 +112,7 @@ task.patch("/tasks/:id", auth, async (req, res) => {
   }
 });
 
-task.post("/tasks", async (req, res) => {
+task.post("/tasks", auth, async (req, res) => {
   console.log(req.body);
   const task = new Task(req.body);
   try {
@@ -125,7 +125,7 @@ task.post("/tasks", async (req, res) => {
 
 // End-point for reading all task
 
-task.get("/tasks", (req, res) => {
+task.get("/tasks", auth, (req, res) => {
   console.log(req.body);
   Task.find({})
     .then((task) => {

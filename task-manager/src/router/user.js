@@ -119,7 +119,7 @@ user.post("/users/login", async (req, res) => {
     const token = await user.generateAuthToken();
     res.send({ user, token });
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send({ error: e.message });
   }
 });
 
@@ -127,13 +127,16 @@ user.post("/users/login", async (req, res) => {
 
 user.post("/users/logout", auth, async (req, res) => {
   try {
+    console.log(req.user.tokens);
     req.user.tokens = req.user.tokens.filter((token) => {
       return token.token !== req.token;
     });
+    console.log(req.user.tokens);
     await req.user.save();
     res.send("You are logged out");
   } catch (e) {
-    res.status(500).send();
+    console.log(e);
+    res.status(500).send({ error: e.message });
   }
 });
 
@@ -219,4 +222,5 @@ user.get("/users/:id/avatar", async (req, res) => {
     res.status(404).send(e.message);
   }
 });
+
 module.exports = user;
